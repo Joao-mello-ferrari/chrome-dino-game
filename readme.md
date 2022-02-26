@@ -1,5 +1,5 @@
 # About
-On this file the role of each file of the project will be explained, as well as how it works and some issues/solutions found during development.
+On this file the role of each module of the project will be explained, as well as how it works and some issues/solutions found during development.
 In the end, a way to be unbeatable will be shown, so stick to the end.
 In case you wanna see how everything works together, here is the link to my youtube video about the project.
 It was recorded in portuguese, but it is still possibile to get the feeling of it.
