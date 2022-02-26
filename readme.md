@@ -1,71 +1,75 @@
-Neste arquivo será exposta a função de cada arquivo do projeto, bem como o funcionameno do mesmo e problemas/soluções encontradas durante a fase de desenvolvimento. 
-No final será mostrada um trecho de código que pode ser
-substituído no arquivo "main.py", que permite ao jogador vencer fazendo 
-nenhuma ação.
-
-# Funções dos arquivos
--imgs (pasta de arquivos) |-> Armazenar as imagens utilizadas no jogo
--commandHelpers.py |-> Responsável por analisar cenários da aplicação e propor ações
--demoSimulator.py |-> Guardar a lóica do modo DEMO do jogo
--graphHelper.py |-> Construir o gráfico e manipular o arquivo de dados
--objectHelpers.py |-> Responsável por montar objetos visuais e mostrá-los em tela
--progress.txt |-> Armazenar o progresso do usuário
--errorHelpers |-> Mostrar mensagens de erro
--main.py |-> Arquivo principal do jogo
--mainComentada.py |-> Idêntico ao main.py, porém totalmente comentado
-
-# Funcionamento
-O jogo original do Chrome possui algumas funcionalidades extras, e esta versão tem,
-da mesma forma, alguns mecanismos adicionais;
-
-O jogo desenvolvido conta com um MODO DEMO, no qual o dinossauro joga de maneira
-autônoma, para que o usuário possa entender o funcionamento da aplicação;
-
-O jogo é baseado em dois movimentos: pular e a abaixar, utilizando com teclas o "Espaço" e o "Página para baixo";
-
-É possibilitado ao usuário ver um gráfico que mostra o seu progresso;
-
-Durante o jogo, é possível alterar a velocidade do mesmo;
-
-No final, é mostrada uma mensagem de vitória/derrota.
-
-# Desafios
--LEITURA INCORRETA DAS TECLAS:
-Se mantivermos uma tecla pressionada, a função checkKey() não retorna todas as leituras correspondentes: a função executa muito rápido, de forma que a maioria das
-leituras são de tecla solta, o que dificulta o desenvolvimento do jogo, pois o dinossauro só fica abaixado se a LEITURA da tecla for "Página para baixo".
-
-Para solucionar, foi feito um filtro de tempo, de forma que uma vez que a tecla foi apertada para baixo, somente depois de x milisegundos que uma nova leitura será considerada. Assim, as leituras indesejadas são desconsideradas.
+# About
+On this file the role of each file of the project will be explained, as well as how it works and some issues/solutions found during development.
+In the end, a way to be unbeatable will be shown, so stick to the end.
+In case you wanna see how everything works together, here is the link to my youtube video about the project.
+It was recorded in portuguese, but it is still possibile to get the feeling of it.
+<br>
+<a href="https://youtu.be/UwLFO1Di3Bg">Check it out!<a/>
 
 
--BOUNCE DO TECLADO:
-O teclado, quando é apertado e pressionado, gera um efeito bounce. Dessa forma, quando a tecla "Página para baixo" é pressionada e mantida, há um tempo que a tecla ainda fica solta. Dessa forma, o dinossauro fica com um bug, no momento em que passa de "levantado" para "abaixado"
+# Role of each file
+<ul>
+  <li>
+    imgs (file folder) -> Stores images used throughout the game
+  </li>
+  <li>
+    commandHelpers.py -> Check every cenario of the game and output what need to be done
+  </li>
+  <li>
+    demoSimulator.py -> Stores the code for de DEMO simulator functionality
+  </li>
+  <li>
+    graphHelper.py -> Build the progress graph it self and handle stored progress data
+  </li>
+  <li>
+    objectHelpers.py -> Create and destroys every single visual instance
+  </li>
+  <li>
+    progress.txt -> Stores progress data
+  </li>
+  <li>
+    errorHelpers -> Display customized error messages
+  </li>
+  <li>
+    main.py -> Main file of the project
+  </li>
+  <li>
+    mainComentada.py -> Same as main, but coomented
+  </li>
+</ul>
 
-Para solucionar, foi feito um buff de tempo, que anula esse tempo de bouce da tecla.
+# How the game works
+The original Chrome game has some extra functionalities, as well as this version.
 
+The developed game has a DEMO mode, in which the dinossaur performs totally autonomously, so the user can get the allowed commands and how the game works.
 
--IDENTIFICAR COLISÃO
-Identificar a colisão do dinossauro com um peça é mais difícil do que parece..
-O que se fez foi mapear alguns pontos do corpo do dinossauro e, somado a isso, um mapeamento das seções de cada obstáculo.
+The whole application is based on 2 moves: jump and lower, by using the keyboard keys 'space' and 'page down', respectively.
 
-Dessa forma, para checar se há uma colisão, pega-se cada ponto do dinossauro e se faz uma checagem para saber se ele está dentro de uma das seções do obstáculo.
-Se qualquer ponto estiver dentro de qualquer seção, então há uma colisão.
+Still, the user can check his progress by requesting a graph, and change the game speed, which directly affects the difficulty.
 
-Por ser uma lógica que consome bastante processamento, esse checagem só é realizada quando o dinossauro está bem próximo do obstáculo, pois se estiver longe, é possível afirmar que não há colisão, com muito menos processamento.
+# Issues
+<strong>READING INCORRECT KEYS</strong>:
+If a random key if kept down, the 'checkKey()' function does not return every single correspondent key readings. The function executes too fast, so that most of signals read are incorect.
+To fix it, a time filter was developed, so that from the moment a key is pressed down, only after x mili seconds a new reading is considered. With that, unwished readings are cut off.
 
+<strong>KEYBOARD BOUNCE</strong>:
+As a key is pressed and kept down, a bounce effect is created, so that when the 'page down' key is pressed, there is still a time range during which the current key is considered off. This causes a bug, which leads the dinossaur to toggle its state.
+In order to solve it, a time buffer was created, will cancels the key bounce time.
 
-# Como ser invencível?
-Isso é fácil! 
-No arquivo main.py, há na linha 51 a seguinte lógica:
+<strong>IDENTIFY COLLISION</strong>:
+To check if there is a collision between the dinossaur and a obsctacle is harder than it looks like...
+To add this functionality, a maping of strategic points of each image was produced.
+Therefore, to check for a collision, every single point of the dinossaur runs into a logic block, which points out if the current dot is whitin a range from a specific obstacle.
+If there only one dinossaur point whitin one single obstacle range, a collision is confirmed.
 
-gameOver = checkColision(dino, obstacles, dinoType)
+# How to be unbeatable?
+Oh, that´s pretty dawn easy!
+On the main.py file, on line 51, you will see the following words:
+  
+<strong>gameOver = checkColision(dino, obstacles, dinoType)</strong>
 
-Para torna o dinossauro invencível, tipo um fantasma, basta SUBSTITUIR
-essa linha por:
+To become invencible, like a ghost, you just need to replace this whole line for:
 
-gameOver = False
+<strong>gameOver = False</strong>
 
-Se achar o jogo muito difícil, é possível usar esse mecanismo :)
-
-
-
-
+In case you think the game is complicated, there is this trick you can use :)
