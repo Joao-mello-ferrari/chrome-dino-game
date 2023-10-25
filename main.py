@@ -1,24 +1,26 @@
 try: from errorHelpers import importErrorMessage
 except: print("Coloque o arquivo errorHelpers.py no diretório do main.py!")
 
-try:
-    from graphics import *
-    from time import sleep
-    from datetime import datetime as d
+# try:
+from graphics import *
+from time import sleep
+from datetime import datetime as d
 
-    from objectHelpers import *
-    from commandHelpers import *
-    from graphHelper import *
-    from demoSimulator import *
+from objectHelpers import *
+from commander import Commander
+from graphHelper import *
+from demoSimulator import *
     
-except: print(importErrorMessage())
+# except: print(importErrorMessage())
 
 
 def main(firstTime, win):
     if firstTime:
         win=GraphWin("ChromeDino",1000,600, autoflush=False)
+        win.setBackground("#cccccc")
         drawFooter(win, "#222222")
 
+    commander = Commander(win)
     dino, obstacles, line, renderDemo = drawIntro(win)
      
     while True:
@@ -39,31 +41,32 @@ def main(firstTime, win):
     frame = None
     speedButtons = None
     lastButtonIndex = None
-    speed = 1
+    speed = 4
     
     while True:
+        print(speed)
         frame, progress = renderProgressBar(win, levelCounter, progress, frame)
         
-        obstacles = moveObstacles(obstacles, levelCounter, speed)
-        obstacles, levelCounter = checkObstaclesPosition(obstacles, levelCounter)
-        obstacles = renderNewObstacles(win, obstacles, levelCounter)
+        obstacles = commander.moveObstacles(obstacles, levelCounter, speed)
+        obstacles, levelCounter = commander.checkObstaclesPosition(obstacles, levelCounter)
+        obstacles = commander.renderNewObstacles(obstacles, levelCounter)
         
-        gameOver = checkColision(dino, obstacles, dinoType)
+        gameOver = commander.checkColision(dino, obstacles, dinoType)
         if gameOver or (levelCounter == 23 and jumpCompleted): break
         
         key = win.checkKey()
         if key == "space" or not jumpCompleted:
-            jumpCompleted, jumpCounter = jump(dino, jumpCounter, speed)
+            jumpCompleted, jumpCounter = commander.jump(dino, jumpCounter, speed)
     
         elif key == "Down":
             lastKeyFilterTime = d.now()
             if dinoType == "up": timeBuff = 450000    
             else: timeBuff = 0
             
-            dino, dinoType = changeDino(win, dino, dinoType, "down")
+            dino, dinoType = commander.changeDino(win, dino, dinoType, "down")
         
         elif (d.now() - lastKeyFilterTime).microseconds > 50000+timeBuff:  
-            dino, dinoType = changeDino(win, dino, dinoType, "up")
+            dino, dinoType = commander.changeDino(win, dino, dinoType, "up")
         
         if (d.now() - lastAnimationTime).microseconds > 200000/speed:
             dino, obstacles, boolLastImgFrame = toggleImg(win, dino, obstacles, not boolLastImgFrame, dinoType)
@@ -71,9 +74,9 @@ def main(firstTime, win):
         
         if jumpCompleted:
             click = win.checkMouse()
-            speedButtons, speed, lastButtonIndex = changeSpeed(win, click, speed, speedButtons, lastButtonIndex)
+            speedButtons, _, lastButtonIndex = commander.changeSpeed(win, click, speed, speedButtons, lastButtonIndex)
     
-        update(250)
+        update(10000)
     
     if not gameOver: dino, obstacles, portic = renderVictoryCenario(win, dino, obstacles, dinoType)
     else: portic = []
